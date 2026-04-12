@@ -409,83 +409,113 @@ def main() -> int:
     parser.add_argument("--require-any-ai", action="store_true")
     parser.add_argument("--fallback-to-draft-on-all-fail", action="store_true")
     parser.add_argument("--fallback-on-openai-error", action="store_true")
+    parser.add_argument("--mock-botox", action="store_true", help="Gera um post estático de Botox para testes sem usar IA")
     parser.add_argument("--ai-provider-order", default="openai,anthropic,gemini,deepseek")
     args = parser.parse_args()
 
-    openai_key = os.environ.get("OPENAI_API_KEY", "").strip()
-    anthropic_key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
-    anthropic_key_fallback = os.environ.get("ANTHROPIC_API_KEY_FALLBACK", "").strip()
-    gemini_key = os.environ.get("GOOGLE_API_KEY", "").strip()
-    deepseek_key = os.environ.get("DEEPSEEK_API_KEY", "").strip()
+    # Lógica de Mock para testes sem saldo de API
+    if args.mock_botox:
+        print("🧪 MODO MOCK ATIVADO: Gerando post de Botox estático para teste de produção...")
+        result = {
+            "source_title": "Benefícios do Botox na Harmonização Facial",
+            "source_url": "https://drabrunasilvestrini.com.br",
+            "caption": (
+                "Você sabia que o Botox vai muito além de tratar rugas?\n\n"
+                "A toxina botulínica é uma das aliadas mais poderosas da harmonização facial. "
+                "Ela ajuda a relaxar os músculos, suavizar expressões e prevenir o envelhecimento precoce, "
+                "mantendo um aspecto natural e descansado.\n\n"
+                "Quais são os principais benefícios?\n"
+                "✅ Suavização de linhas de expressão (testa, glabela e 'pés de galinha');\n"
+                "✅ Prevenção de novas rugas;\n"
+                "✅ Arquear das sobrancelhas para um olhar mais aberto;\n"
+                "✅ Tratamento de bruxismo e sorriso gengival.\n\n"
+                "O segredo está na técnica refinada para realçar sua beleza natural sem exageros."
+                "\n\n📲 Agende sua avaliação pelo WhatsApp: (11) 99550-5765\nOu clique no link da bio!"
+            ),
+            "hashtags": ["botox", "harmonizacaofacial", "esteticapremium", "drabrunasilvestrini", "beleza"],
+            "image_prompt": "Elegant woman in a luxury medical clinic, receiving facial assessment, soft lighting, premium aesthetic vibe, high resolution",
+            "alt_text": "Mulher elegante em consulta estética para aplicação de botox",
+            "posting_suggestion": "Postar às 18h para maior engajamento",
+            "story_idea": "Fazer uma enquete: Qual região do rosto mais te incomoda?",
+            "disclaimer": "Consulte um profissional habilitado. Resultados variam de pessoa para pessoa.",
+            "is_video": False,
+            "video_script": ""
+        }
+    else:
+        openai_key = os.environ.get("OPENAI_API_KEY", "").strip()
+        anthropic_key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
+        anthropic_key_fallback = os.environ.get("ANTHROPIC_API_KEY_FALLBACK", "").strip()
+        gemini_key = os.environ.get("GOOGLE_API_KEY", "").strip()
+        deepseek_key = os.environ.get("DEEPSEEK_API_KEY", "").strip()
 
-    context = ssl_context(args.insecure_ssl)
+        context = ssl_context(args.insecure_ssl)
 
-    weekday_theme = get_theme_for_today()
-    print(f"🗓️ Tema do dia: {weekday_theme['name']}")
+        weekday_theme = get_theme_for_today()
+        print(f"🗓️ Tema do dia: {weekday_theme['name']}")
 
-    seed = {
-        "topic": "estética e harmonização facial",
-        "brand": {
-            "name": "Dra. Bruna Silvestrini",
-            "tone": "premium e empático",
-            "cta": "Agende pelo WhatsApp (11) 99550-5765",
-        },
-        "theme_of_today": weekday_theme["name"]
-    }
+        seed = {
+            "topic": "estética e harmonização facial",
+            "brand": {
+                "name": "Dra. Bruna Silvestrini",
+                "tone": "premium e empático",
+                "cta": "Agende pelo WhatsApp (11) 99550-5765",
+            },
+            "theme_of_today": weekday_theme["name"]
+        }
 
-    # Só buscar notícias/XML se o tema de hoje pedir (ex: Terça, onde o tema é notícias e precisamos do seed do pubmed)
-    if dt.date.today().weekday() == 1:
-        try:
-            item = fetch_pubmed_latest(args.query, context=context)
-        except Exception:
+        # Só buscar notícias/XML se o tema de hoje pedir (ex: Terça, onde o tema é notícias e precisamos do seed do pubmed)
+        if dt.date.today().weekday() == 1:
             try:
-                item = fetch_google_news_first(args.query, context=context)
+                item = fetch_pubmed_latest(args.query, context=context)
             except Exception:
-                item = {"title": "Avanços na harmonização", "link": "https://drabrunasilvestrini.com.br", "description": ""}
-        seed["article"] = item
-
-    if args.dry_run and not openai_key:
-        print("Dry-run sem execução de APIs por falta de key. Fechando.")
-        return 0
-
-    system_prompt = build_system_message(weekday_theme)
-
-    provider_order = [p.strip().lower() for p in args.ai_provider_order.split(",") if p.strip()]
-    result = None
-    all_errors = []
-
-    for provider in provider_order:
-        if provider == "openai" and openai_key:
-            try:
-                result = call_openai(api_key=openai_key, model=args.model, system_prompt=system_prompt, seed=seed, context=context)
-                break
-            except Exception as e:
-                all_errors.append(f"OpenAI: {e}")
-        if provider == "anthropic":
-            a_keys = [anthropic_key, anthropic_key_fallback]
-            a_keys = [k for k in a_keys if k]
-            a_success = False
-            for k in a_keys:
                 try:
-                    result = call_anthropic(api_key=k, model=args.anthropic_model, system_prompt=system_prompt, seed=seed, context=context)
-                    a_success = True
+                    item = fetch_google_news_first(args.query, context=context)
+                except Exception:
+                    item = {"title": "Avanços na harmonização", "link": "https://drabrunasilvestrini.com.br", "description": ""}
+            seed["article"] = item
+
+        if args.dry_run and not openai_key:
+            print("Dry-run sem execução de APIs por falta de key. Fechando.")
+            return 0
+
+        system_prompt = build_system_message(weekday_theme)
+
+        provider_order = [p.strip().lower() for p in args.ai_provider_order.split(",") if p.strip()]
+        result = None
+        all_errors = []
+
+        for provider in provider_order:
+            if provider == "openai" and openai_key:
+                try:
+                    result = call_openai(api_key=openai_key, model=args.model, system_prompt=system_prompt, seed=seed, context=context)
                     break
                 except Exception as e:
-                    all_errors.append(f"Anthropic (Chave terminada em {k[-4:]}): {e}")
-            if a_success:
-                break
-        if provider == "gemini" and gemini_key:
-            try:
-                result = call_gemini(api_key=gemini_key, model=args.gemini_model, system_prompt=system_prompt, seed=seed, context=context)
-                break
-            except Exception as e:
-                all_errors.append(f"Gemini: {e}")
-        if provider == "deepseek" and deepseek_key:
-            try:
-                result = call_deepseek(api_key=deepseek_key, model=args.deepseek_model, system_prompt=system_prompt, seed=seed, context=context)
-                break
-            except Exception as e:
-                all_errors.append(f"DeepSeek: {e}")
+                    all_errors.append(f"OpenAI: {e}")
+            if provider == "anthropic":
+                a_keys = [anthropic_key, anthropic_key_fallback]
+                a_keys = [k for k in a_keys if k]
+                a_success = False
+                for k in a_keys:
+                    try:
+                        result = call_anthropic(api_key=k, model=args.anthropic_model, system_prompt=system_prompt, seed=seed, context=context)
+                        a_success = True
+                        break
+                    except Exception as e:
+                        all_errors.append(f"Anthropic (Chave terminada em {k[-4:]}): {e}")
+                if a_success:
+                    break
+            if provider == "gemini" and gemini_key:
+                try:
+                    result = call_gemini(api_key=gemini_key, model=args.gemini_model, system_prompt=system_prompt, seed=seed, context=context)
+                    break
+                except Exception as e:
+                    all_errors.append(f"Gemini: {e}")
+            if provider == "deepseek" and deepseek_key:
+                try:
+                    result = call_deepseek(api_key=deepseek_key, model=args.deepseek_model, system_prompt=system_prompt, seed=seed, context=context)
+                    break
+                except Exception as e:
+                    all_errors.append(f"DeepSeek: {e}")
 
     if result is None:
         err_sum = "\n".join(all_errors)

@@ -8,6 +8,10 @@ on:
       query:
         description: "Consulta ou tema manual"
         required: false
+      mock_botox:
+        description: "Usar post estático (Botox) para teste de produção?"
+        type: boolean
+        default: false
 
 jobs:
   generate:
@@ -41,7 +45,9 @@ jobs:
           fi
           QUERY="${{ github.event.inputs.query }}"
           if [ -z "$QUERY" ]; then QUERY="auto"; fi
-          python -u scripts/daily_post.py --require-any-ai --fallback-to-draft-on-all-fail --fallback-on-openai-error --ai-provider-order "openai,anthropic,gemini,deepseek" --query "$QUERY"
+          MOCK_FLAG=""
+          if [ "${{ github.event.inputs.mock_botox }}" = "true" ]; then MOCK_FLAG="--mock-botox"; fi
+          python -u scripts/daily_post.py $MOCK_FLAG --require-any-ai --fallback-to-draft-on-all-fail --fallback-on-openai-error --ai-provider-order "openai,anthropic,gemini,deepseek" --query "$QUERY"
 
       - name: Create pull request
         id: cpr
