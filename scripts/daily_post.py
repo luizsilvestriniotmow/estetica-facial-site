@@ -513,101 +513,116 @@ def main() -> int:
         if args.fallback_to_draft_on_all_fail:
             print(f"⚠️ Todos os provedores de IA falharam.\nErros: {err_sum}\n\n👉 Usando post de fallback (Banco de Posts Padrão do Site).")
             weekday = dt.date.today().weekday()
-            fallback_posts = {
-                0: {
-                    "source_title": "Antes e Depois - Procedimentos",
-                    "source_url": "https://drabrunasilvestrini.com.br/#procedimentos",
-                    "caption": "Transformar não é mudar quem você é, mas realçar o que já existe de mais belo. ✨\nHoje compartilhamos mais um resultado incrível de preenchimento facial, onde a naturalidade e a elegância foram o foco principal do nosso protocolo. Cada detalhe foi planejado para devolver o contorno e a hidratação que a pele merece.\n\n📲 Agende sua avaliação pelo WhatsApp: (11) 99550-5765\nOu clique no link da bio!",
-                    "hashtags": ["#DraBrunaSilvestrini", "#AntesEDepois", "#PreenchimentoFacial", "#HarmonizacaoFacial", "#BelezaNatural", "#ClinicaEsteticaSP"],
-                    "image_prompt": "Fotografia hiper-realista de uma mulher sorrindo e confiante em um ambiente clínico de alto padrão, pele com brilho natural, iluminação fotográfica suave, lente 85mm, 4k",
-                    "alt_text": "Mulher sorrindo com pele radiante após procedimento estético.",
+            
+            # Fallbacks usando IMAGENS REAIS do site (https://drabrunasilvestrini.com.br/assets/...)
+            # A variável 'image_url' forçará o script de publicação a baixar essa imagem invés de gerar uma nova.
+            fallback_posts = [
+                {
+                    "source_title": "Conheça a Dra. Bruna Silvestrini",
+                    "source_url": "https://drabrunasilvestrini.com.br/#quem-somos",
+                    "caption": "A clínica é um espaço pensado nos mínimos detalhes, dedicado exclusivamente a realçar a sua beleza natural através de tratamentos estéticos de excelência. 💖
+
+Como especialista reconhecida em procedimentos faciais injetáveis, uno a ciência à arte para entregar resultados que rejuvenescem e valorizam seus traços únicos. Nossa missão não é transformar quem você é, mas resgatar o seu brilho e devolver a juventude com total naturalidade, segurança e equilíbrio.
+
+📲 Agende sua avaliação pelo WhatsApp: (11) 99550-5765
+Ou clique no link da bio!",
+                    "hashtags": ["#DraBrunaSilvestrini", "#QuemSomos", "#HarmonizacaoFacial", "#BelezaNatural", "#ClinicaEsteticaSP", "#OdontologiaEstetica"],
+                    "image_prompt": "",
+                    "image_url": "https://drabrunasilvestrini.com.br/assets/doctor_profile_updated_full_head.png",
+                    "alt_text": "Dra. Bruna Silvestrini",
                     "posting_suggestion": "Postar no Feed às 18h",
-                    "story_idea": "Mostre os bastidores do atendimento deste caso de sucesso.",
+                    "story_idea": "Mostre os bastidores da clínica.",
                     "disclaimer": "Resultados variam. Avaliação individual é indispensável.",
                     "is_video": False,
                     "video_script": ""
                 },
-                1: {
-                    "source_title": "Atualizações em Harmonização",
+                {
+                    "source_title": "Toxina Botulínica",
                     "source_url": "https://drabrunasilvestrini.com.br/#procedimentos",
-                    "caption": "A ciência da beleza evolui a cada dia! 📚\nEstudos recentes reforçam que os tratamentos preventivos, quando realizados com técnicas atualizadas e produtos premium, são a chave para um envelhecimento elegante. Nossa clínica está sempre buscando as melhores inovações para entregar resultados seguros e duradouros para você.\n\n📲 Agende sua avaliação pelo WhatsApp: (11) 99550-5765\nOu clique no link da bio!",
-                    "hashtags": ["#DraBrunaSilvestrini", "#CienciaEBeleza", "#EsteticaAvancada", "#Rejuvenescimento", "#HarmonizacaoFacial", "#SaudeDaPele"],
-                    "image_prompt": "Fotografia hiper-realista de uma médica dermatologista sorrindo de jaleco branco segurando um frasco de produto premium, em uma clínica de estética muito bem iluminada, tons claros, 85mm, 4k",
-                    "alt_text": "Dra. Bruna Silvestrini em seu consultório focado em ciência estética.",
+                    "caption": "A famosa 'fórmula da juventude'! ✨
+
+A Toxina Botulínica é essencial para relaxar a musculatura, suavizar linhas de expressão e rugas, e prevenir os sinais do envelhecimento precoce. Uma prevenção inteligente que garante arqueamento de sobrancelhas e um rosto mais descansado, mantendo a naturalidade.
+
+📲 Agende sua avaliação pelo WhatsApp: (11) 99550-5765
+Ou clique no link da bio!",
+                    "hashtags": ["#DraBrunaSilvestrini", "#ToxinaBotulinica", "#Botox", "#Prevenção", "#RejuvenescimentoFacial", "#PeleLisa"],
+                    "image_prompt": "",
+                    "image_url": "https://drabrunasilvestrini.com.br/assets/botox1.jpeg",
+                    "alt_text": "Aplicação de Toxina Botulínica",
                     "posting_suggestion": "Postar no Feed às 12h",
-                    "story_idea": "Explique rapidamente nos stories um novo estudo ou técnica da clínica.",
+                    "story_idea": "Mostre como é rápido o procedimento de toxina.",
                     "disclaimer": "Resultados variam. Avaliação individual é indispensável.",
                     "is_video": False,
                     "video_script": ""
                 },
-                2: {
-                    "source_title": "Curiosidades sobre a Pele",
-                    "source_url": "https://drabrunasilvestrini.com.br/#quem-somos",
-                    "caption": "Você sabia que a produção de colágeno começa a cair a partir dos 25 anos? 💧\nÉ por isso que a hidratação profunda e os bioestimuladores são os queridinhos do momento! Eles agem de dentro para fora, devolvendo a firmeza e o viço natural do rosto, sem exageros. O segredo é sempre a prevenção.\n\n📲 Agende sua avaliação pelo WhatsApp: (11) 99550-5765\nOu clique no link da bio!",
-                    "hashtags": ["#DraBrunaSilvestrini", "#CuriosidadeEstetica", "#Colageno", "#Bioestimuladores", "#Skincare", "#EsteticaPremium"],
-                    "image_prompt": "Fotografia hiper-realista do rosto de uma mulher com pele perfeita, natural e iluminada, sendo examinada delicadamente por mãos com luvas brancas, ambiente clínico de luxo, 85mm, 4k",
-                    "alt_text": "Detalhe da pele saudável de uma paciente recebendo cuidados.",
-                    "posting_suggestion": "Postar no Feed às 19h",
-                    "story_idea": "Faça uma enquete perguntando se os seguidores já usam bioestimuladores.",
-                    "disclaimer": "Resultados variam. Avaliação individual é indispensável.",
-                    "is_video": False,
-                    "video_script": ""
-                },
-                3: {
-                    "source_title": "Nossos Tratamentos Exclusivos",
+                {
+                    "source_title": "Preenchimento Labial",
                     "source_url": "https://drabrunasilvestrini.com.br/#procedimentos",
-                    "caption": "Merecer um tempo para cuidar de si mesma é o melhor investimento que você pode fazer. ✨\nAproveite para agendar sua avaliação e descobrir o protocolo ideal para destacar os pontos fortes do seu rosto. Vagas limitadas para essa semana, não deixe seu bem-estar para depois!\n\n📲 Agende sua avaliação pelo WhatsApp: (11) 99550-5765\nOu clique no link da bio!",
-                    "hashtags": ["#DraBrunaSilvestrini", "#Autocuidado", "#AgendeSeuHorario", "#HarmonizacaoFacial", "#ClinicaEsteticaSP", "#AmorProprio"],
-                    "image_prompt": "Fotografia hiper-realista do interior de uma clínica de estética de alto padrão, poltrona de atendimento confortável, tons pastéis e dourados, luz natural entrando pela janela, 4k",
-                    "alt_text": "Ambiente sofisticado e acolhedor da clínica Dra. Bruna Silvestrini.",
-                    "posting_suggestion": "Postar no Feed às 10h",
-                    "story_idea": "Mostre a agenda da semana e incentive as marcações.",
+                    "caption": "Lábios desenhados sob medida para você! 👄
+
+Utilizamos ácido hialurônico para hidratar, projetar e corrigir assimetrias, entregando um volume apaixonante e super natural. Garanta um contorno definido, hidratação profunda (Gloss Lips) e a proporção perfeita que seu rosto merece.
+
+📲 Agende sua avaliação pelo WhatsApp: (11) 99550-5765
+Ou clique no link da bio!",
+                    "hashtags": ["#DraBrunaSilvestrini", "#PreenchimentoLabial", "#LabiosPerfeitos", "#GlossLips", "#AcidoHialuronico", "#HarmonizacaoFacial"],
+                    "image_prompt": "",
+                    "image_url": "https://drabrunasilvestrini.com.br/assets/preenchimento1.jpeg",
+                    "alt_text": "Procedimento de Preenchimento Labial",
+                    "posting_suggestion": "Postar no Feed às 19h",
+                    "story_idea": "Compartilhe um antes e depois imediato de preenchimento labial.",
                     "disclaimer": "Resultados variam. Avaliação individual é indispensável.",
                     "is_video": False,
                     "video_script": ""
                 },
-                4: {
-                    "source_title": "Dicas de Skincare",
-                    "source_url": "https://drabrunasilvestrini.com.br/#quem-somos",
-                    "caption": "Sextou com dica de ouro para o seu final de semana! 🧖‍♀️\nNão se esqueça de que a rotina de cuidados em casa (home care) é fundamental para prolongar os resultados da harmonização facial. Limpeza suave, hidratação e muito protetor solar são os melhores amigos da sua pele. Cuide-se com carinho!\n\n📲 Agende sua avaliação pelo WhatsApp: (11) 99550-5765\nOu clique no link da bio!",
-                    "hashtags": ["#DraBrunaSilvestrini", "#SkincareRoutine", "#CuidadosComAPele", "#EsteticaFacial", "#PeleSaudavel", "#FimDeSemana"],
-                    "image_prompt": "Fotografia hiper-realista de uma mulher linda aplicando delicadamente um creme no rosto em frente a um espelho bem iluminado, atmosfera luxuosa e serena de spa, 85mm, 4k",
-                    "alt_text": "Mulher fazendo sua rotina luxuosa de skincare.",
+                {
+                    "source_title": "Harmonização Full Face",
+                    "source_url": "https://drabrunasilvestrini.com.br/#procedimentos",
+                    "caption": "Um tratamento completo para devolver a luz ao seu rosto! 🌟
+
+A Harmonização Full Face inclui preenchimento de olheiras profundas, correção do bigode chinês e sustentação mandibular. O resultado? Uma aparência descansada, sustentação dos tecidos e uma harmonia facial global incrível.
+
+📲 Agende sua avaliação pelo WhatsApp: (11) 99550-5765
+Ou clique no link da bio!",
+                    "hashtags": ["#DraBrunaSilvestrini", "#HarmonizacaoFullFace", "#PreenchimentoDeOlheiras", "#SustentacaoFacial", "#BelezaNatural", "#Autoestima"],
+                    "image_prompt": "",
+                    "image_url": "https://drabrunasilvestrini.com.br/assets/harmonizacao_full_face.png",
+                    "alt_text": "Resultados de Harmonização Full Face",
                     "posting_suggestion": "Postar no Feed às 18h",
-                    "story_idea": "Mostre os 3 produtos essenciais de skincare que você recomenda.",
+                    "story_idea": "Explique a importância da avaliação global do rosto.",
                     "disclaimer": "Resultados variam. Avaliação individual é indispensável.",
                     "is_video": False,
                     "video_script": ""
                 },
-                5: {
-                    "source_title": "Resultados Avançados",
-                    "source_url": "https://drabrunasilvestrini.com.br/#depoimentos",
-                    "caption": "Sábado é dia de celebrar a autoestima! 🥂\nNossa maior alegria é ver o sorriso radiante de quem redescobre a própria beleza após um protocolo de Fios de Sustentação. O efeito lifting sutil devolve o contorno jovem ao rosto, preservando a identidade única de cada paciente. Venha viver essa experiência!\n\n📲 Agende sua avaliação pelo WhatsApp: (11) 99550-5765\nOu clique no link da bio!",
-                    "hashtags": ["#DraBrunaSilvestrini", "#FiosDeSustentacao", "#EfeitoLifting", "#AutoestimaElevada", "#EsteticaPremium", "#ResultadosNaturais"],
-                    "image_prompt": "Fotografia hiper-realista de uma mulher elegante e sorridente em um evento sofisticado, rosto com contornos perfeitos e pele viçosa, iluminação fotográfica premium, 85mm, 4k",
-                    "alt_text": "Mulher elegante e feliz com seus resultados estéticos.",
-                    "posting_suggestion": "Postar no Feed às 12h",
-                    "story_idea": "Compartilhe um depoimento emocionante de um paciente recente.",
-                    "disclaimer": "Resultados variam. Avaliação individual é indispensável.",
-                    "is_video": False,
-                    "video_script": ""
-                },
-                6: {
-                    "source_title": "Mitos e Verdades",
+                {
+                    "source_title": "Por que nossa clínica é a escolha ideal?",
                     "source_url": "https://drabrunasilvestrini.com.br/#quem-somos",
-                    "caption": "Mito ou Verdade: A harmonização facial sempre deixa o rosto artificial? 🤔\nMITO! O verdadeiro objetivo da harmonização é exatamente o oposto: equilibrar proporções e suavizar marcas com tamanha sutileza que ninguém percebe o que foi feito, apenas que você está mais descansada e bonita. Confie na técnica e na arte da naturalidade.\n\n📲 Agende sua avaliação pelo WhatsApp: (11) 99550-5765\nOu clique no link da bio!",
-                    "hashtags": ["#DraBrunaSilvestrini", "#MitosEVerdades", "#HarmonizacaoNatural", "#EsteticaFacial", "#BelezaComProposito", "#ToxinaBotulinica"],
-                    "image_prompt": "Fotografia hiper-realista de uma médica sorrindo em seu consultório premium, transmitindo confiança e empatia, luz suave e natural, 85mm, 4k",
-                    "alt_text": "Dra. Bruna explicando de forma acolhedora sobre estética.",
-                    "posting_suggestion": "Postar no Feed às 19h",
-                    "story_idea": "Faça um quiz rápido sobre mitos e verdades da toxina botulínica.",
+                    "caption": "Por que escolher a nossa clínica para o seu cuidado facial? 💎
+
+✔️ Excelência: Compromisso com resultados impecáveis.
+✔️ Segurança: Protocolos rigorosos e a melhor tecnologia do mercado.
+✔️ Inovação: Técnicas modernas e produtos premium de última geração.
+✔️ Exclusividade: Tratamentos 100% personalizados com mapeamento individualizado do seu rosto.
+
+Venha viver essa experiência!
+
+📲 Agende sua avaliação pelo WhatsApp: (11) 99550-5765
+Ou clique no link da bio!",
+                    "hashtags": ["#DraBrunaSilvestrini", "#ClinicaEsteticaSP", "#EsteticaPremium", "#Seguranca", "#InovacaoNaEstetica", "#AtendimentoExclusivo"],
+                    "image_prompt": "",
+                    "image_url": "https://drabrunasilvestrini.com.br/assets/hero_modern_interactive_face_1770921982241.png",
+                    "alt_text": "Rosto interativo e moderno representando tecnologia e exclusividade",
+                    "posting_suggestion": "Postar no Feed às 12h",
+                    "story_idea": "Mostre os produtos premium que você utiliza.",
                     "disclaimer": "Resultados variam. Avaliação individual é indispensável.",
                     "is_video": False,
                     "video_script": ""
                 }
-            }
+            ]
             
-            result = fallback_posts.get(weekday, fallback_posts[0])
+            # Escolhe um post de fallback aleatório da lista oficial do site
+            import random
+            result = random.choice(fallback_posts)
+
         else:
             raise RuntimeError(f"Nenhum provedor de IA respondeu com sucesso.\nErros detalhados:\n{err_sum}")
 
